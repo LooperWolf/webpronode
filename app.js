@@ -44,15 +44,23 @@
 //    var port = server.address().port
 //    console.log("Example app listening at http://%s:%s", host, port)
 // })
+var dbo
 
-const MongoClient = require('mongodb').MongoClient
+// const MongoClient = require('mongodb').MongoClient;
+// const uri = "mongodb+srv://poom:potato@cluster0.lvxjb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+// const client = new MongoClient(uri, { useNewUrlParser: true, useUnifiedTopology: true });
+// client.connect(err => {
+//    dbo = client.db("Userdb")
+//   // perform actions on the collection object
+// });
 const ObjectID = require('mongodb').ObjectID
 const express = require('express')
 const cors = require('cors')
 const bp = require('body-parser')
 var app = express()
-var url = "mongodb://localhost:27017"
-var dbo
+const MongoClient = require('mongodb').MongoClient
+// const uri = "mongodb+srv://poom:<poom>@cluster0.lvxjb.mongodb.net/myFirstDatabase?retryWrites=true&w=majority";
+var url = "mongodb://poom:potato@cluster0-shard-00-00.lvxjb.mongodb.net:27017,cluster0-shard-00-01.lvxjb.mongodb.net:27017,cluster0-shard-00-02.lvxjb.mongodb.net:27017/myFirstDatabase?ssl=true&replicaSet=atlas-rwr553-shard-0&authSource=admin&retryWrites=true&w=majority"
 app.use(cors())
 app.use(bp.json())
 app.use(bp.urlencoded({ extended: true }))
@@ -113,9 +121,10 @@ app.post('/init', function (req, res) {
                 "https://semantic-ui-vue.github.io/static/images/avatar/large/elyse.png",
         },
     ]
-    dbo.collection('contacts').insertMany(testContacts, function (err, res) {
+    dbo.collection('contacts').insertMany(testContacts, function (err, resp) {
         if (err) throw err;
         console.log("Number of documents inserted: " + res.insertedCount);
+        res.send()
     })
 })
 app.get('/contacts/getmany', function (req, res) {
